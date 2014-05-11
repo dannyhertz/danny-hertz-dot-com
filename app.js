@@ -5,7 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var Rdio = require("node-rdio");
+
+var DANNY_USER_KEY = 's249516',
+    RDIO_KEY = 'fww8k5eveeh44zgcrmqmmahj',
+    RDIO_SECRET = 'b7JQcw62cG';
+
 var app = express();
 
 // view engine setup
@@ -19,7 +24,33 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+function rdioInstance() {
+  return new Rdio([RDIO_KEY, RDIO_SECRET]);
+}
+
+app.get('/latest_played.json', function(req, res) {
+  rdioInstance().call('get',
+    {
+      'keys': DANNY_USER_KEY,
+      'extras': 'lastSongPlayed, lastSongPlayTime'
+    },
+    function(err, data) {
+    var dannyUser, latestSong, latestSongTime;
+
+    if (data.status && data.status === 'ok') {
+      dannyUser = data.result[DANNY_USER_KEY];
+      latestSong = dannyUser['lastSongPlayed'];
+      latestSong.playedAt = dannyUser['lastSongPlayTime'];
+      res.send(latestSong);
+    } else {
+      res.send(null);
+    }
+  });
+});
+
+app.get('/', function (req, res) {
+    res.render('index', { title: 'Danny Hertz Dot Com'});
+});
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -28,10 +59,7 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-/// error handlers
-
-// development error handler
-// will print stacktrace
+// development error handler: will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
@@ -42,8 +70,7 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
+// production error handler: no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
