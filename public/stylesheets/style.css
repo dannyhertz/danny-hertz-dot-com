@@ -17,7 +17,7 @@ body {
 }
 .album-cover:after {
   content: ' ';
-  position: fixed;
+  position: absolute;
   height: 30%;
   left: 0;
   right: 0;
@@ -30,7 +30,7 @@ body {
 }
 
 .album-details {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: 0;
   margin: 0;
@@ -49,7 +49,7 @@ body {
 }
 
 .home-link {
-  position: fixed;
+  position: absolute;
   bottom: 14px;
   left: 14px;
   margin: 0;
