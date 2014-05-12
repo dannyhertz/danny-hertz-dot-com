@@ -21,7 +21,7 @@ $(function () {
     albumDetailsText = '"' + latestAlbum.name + '" - ' + latestAlbum.artist;
     $albumDetailsLink = $('<a>', {
       'class': 'album-details',
-      'href': latestAlbum.shortUrl,
+      'href': 'http://www.rdio.com/people/boomcity/history/',
       'target': '_blank',
       'text': albumDetailsText
     });
