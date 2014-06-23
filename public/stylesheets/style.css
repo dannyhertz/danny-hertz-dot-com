@@ -19,11 +19,11 @@ body {
 .album-cover:after {
   content: ' ';
   position: absolute;
-  height: 30%;
+  height: 25%;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
 }
 .visible .album-cover {
   opacity: 1;

@@ -7,9 +7,9 @@ var bodyParser = require('body-parser');
 
 var Rdio = require("node-rdio");
 
-var DANNY_USER_KEY = 's249516',
-    RDIO_KEY = 'fww8k5eveeh44zgcrmqmmahj',
-    RDIO_SECRET = 'b7JQcw62cG';
+var RDIO_USER_KEY = process.env.RDIO_USER_KEY,
+    RDIO_KEY = process.env.RDIO_API_KEY,
+    RDIO_SECRET = process.env.RDIO_API_SECRET;
 
 var app = express();
 
@@ -24,27 +24,31 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-function rdioInstance() {
-  return new Rdio([RDIO_KEY, RDIO_SECRET]);
+var rdioInstance;
+function getRdioAPI() {
+  if (!rdioInstance) {
+    rdioInstance = new Rdio([RDIO_KEY, RDIO_SECRET]);
+  }
+  return rdioInstance;
 }
 
 app.get('/latest_played.json', function(req, res) {
-  rdioInstance().call('get',
+  getRdioAPI().call('get',
     {
-      'keys': DANNY_USER_KEY,
+      'keys': RDIO_USER_KEY,
       'extras': 'lastSongPlayed, lastSongPlayTime'
     },
     function(err, data) {
-    var dannyUser, latestSong, latestSongTime;
+      var dannyUser, latestSong, latestSongTime;
 
-    if (data.status && data.status === 'ok') {
-      dannyUser = data.result[DANNY_USER_KEY];
-      latestSong = dannyUser['lastSongPlayed'];
-      latestSong.playedAt = dannyUser['lastSongPlayTime'];
-      res.send(latestSong);
-    } else {
-      res.send(null);
-    }
+      if (data && data.status && data.status === 'ok') {
+        dannyUser = data.result[RDIO_USER_KEY];
+        latestSong = dannyUser['lastSongPlayed'];
+        latestSong.playedAt = dannyUser['lastSongPlayTime'];
+        res.send(latestSong);
+      } else {
+        res.send(null);
+      }
   });
 });
 
