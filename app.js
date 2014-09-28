@@ -42,6 +42,8 @@ app.get('/latest_played.json', function(req, res) {
     function(err, data) {
       var dannyUser, latestSong, latestSongTime;
 
+      console.log('response:', err, data);
+
       if (data && data.status && data.status === 'ok') {
         dannyUser = data.result[RDIO_USER_KEY];
         latestSong = dannyUser['lastSongPlayed'];
