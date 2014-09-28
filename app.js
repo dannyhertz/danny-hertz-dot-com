@@ -17,7 +17,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 
-app.use(favicon());
+app.use(favicon(__dirname + '/public/favicon-32x32.png'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -33,7 +33,6 @@ function getRdioAPI() {
 }
 
 app.get('/latest_played.json', function(req, res) {
-  console.log('wtf is going on!', RDIO_USER_KEY, RDIO_KEY);
   getRdioAPI().call('get',
     {
       'keys': RDIO_USER_KEY,
@@ -41,8 +40,6 @@ app.get('/latest_played.json', function(req, res) {
     },
     function(err, data) {
       var dannyUser, latestSong, latestSongTime;
-
-      console.log('response:', err, data);
 
       if (data && data.status && data.status === 'ok') {
         dannyUser = data.result[RDIO_USER_KEY];
