@@ -33,6 +33,7 @@ function getRdioAPI() {
 }
 
 app.get('/latest_played.json', function(req, res) {
+  console.log('wtf is going on!', RDIO_USER_KEY, RDIO_KEY);
   getRdioAPI().call('get',
     {
       'keys': RDIO_USER_KEY,
