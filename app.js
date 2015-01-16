@@ -5,13 +5,18 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var Rdio = require("node-rdio");
+var LastFM = require('lastfm').LastFmNode,
+    lastFMTrackParser = require(__dirname + '/lib/lastfm-track-parser');
 
-var RDIO_USER_KEY = process.env.RDIO_USER_KEY,
-    RDIO_KEY = process.env.RDIO_API_KEY,
-    RDIO_SECRET = process.env.RDIO_API_SECRET;
+var LAST_API_KEY = process.env.LAST_API_KEY,
+    LAST_API_SECRET = process.env.LAST_API_SECRET,
+    LAST_USERNAME = process.env.LAST_USERNAME;
 
 var app = express();
+var lastFMClient = new LastFM({
+  api_key: LAST_API_KEY,
+  secret: LAST_API_SECRET
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,31 +29,18 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var rdioInstance;
-function getRdioAPI() {
-  if (!rdioInstance) {
-    rdioInstance = new Rdio([RDIO_KEY, RDIO_SECRET]);
-  }
-  return rdioInstance;
-}
-
 app.get('/latest_played.json', function(req, res) {
-  getRdioAPI().call('get',
-    {
-      'keys': RDIO_USER_KEY,
-      'extras': 'lastSongPlayed, lastSongPlayTime'
-    },
-    function(err, data) {
-      var dannyUser, latestSong, latestSongTime;
-
-      if (data && data.status && data.status === 'ok') {
-        dannyUser = data.result[RDIO_USER_KEY];
-        latestSong = dannyUser['lastSongPlayed'];
-        latestSong.playedAt = dannyUser['lastSongPlayTime'];
-        res.send(latestSong);
-      } else {
+  lastFMClient.request('user.getRecentTracks', {
+    user: LAST_USERNAME,
+    handlers: {
+      success: function (data) {
+        var latestTrack = lastFMTrackParser.parse(data);
+        res.send(latestTrack);
+      },
+      error: function (error) {
         res.send(null);
       }
+    }
   });
 });
 

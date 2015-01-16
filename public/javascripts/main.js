@@ -5,27 +5,24 @@ function getLatestPlayedJSON(cb) {
 }
 
 $(function () {
-  getLatestPlayedJSON(function (err, latestAlbum) {
+  getLatestPlayedJSON(function (err, latestTrack) {
     var $body = $(document.body),
         contentFragment = document.createDocumentFragment(),
-        $albumCover, $albumDetailsLink, $homeLink,
-        albumCoverURL, albumDetailsText;
+        $trackCover, $trackLink, $homeLink;
 
-    albumCoverURL = latestAlbum.icon.replace(/square-(\d*)/, 'square-600');
-    $albumCover = $('<div>', { 'class': 'album-cover' })
+    $trackCover = $('<div>', { 'class': 'album-cover' })
       .css({
-        'background-image': 'url(' + albumCoverURL + ')'
+        'background-image': 'url(' + latestTrack.coverURL + ')'
       });
-    contentFragment.appendChild($albumCover[0]);
+    contentFragment.appendChild($trackCover[0]);
 
-    albumDetailsText = '"' + latestAlbum.name + '" - ' + latestAlbum.artist;
-    $albumDetailsLink = $('<a>', {
+    $trackLink = $('<a>', {
       'class': 'album-details',
-      'href': 'http://www.rdio.com/people/boomcity/history/',
+      'href': 'http://www.last.fm/user/dannyhertz',
       'target': '_blank',
-      'text': albumDetailsText
+      'text': '"' + latestTrack.name + '" - ' + latestTrack.artist
     });
-    contentFragment.appendChild($albumDetailsLink[0]);
+    contentFragment.appendChild($trackLink[0]);
 
     $homeLink = $('<a>', {
       'class': 'home-link',
