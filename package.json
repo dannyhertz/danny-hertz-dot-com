@@ -1,22 +1,29 @@
 {
-  "name": "danny-hertz-dot-com",
-  "author": "Danny Hertz",
-  "version": "0.0.1",
-  "scripts": {
-    "start": "node app.js"
-  },
-  "engines": {
-    "node": "v0.10.x"
-  },
+  "name": "danny-hertz-dot-com-new",
+  "version": "0.0.0",
+  "private": true,
+  "description": "danny-hertz-dot-com-new",
+  "main": "server.js",
   "dependencies": {
-    "express": "~4.0.0",
-    "serve-favicon": "~2.1.5",
-    "morgan": "~1.0.0",
-    "cookie-parser": "~1.0.1",
-    "body-parser": "~1.0.0",
-    "debug": "~0.7.4",
-    "hjs": "~0.0.6",
-    "lastfm": "~0.9.2",
-    "object-path": "~0.8.1"
+    "bootstrap": "^3.3.1",
+    "browserify-middleware": "^4.1.0",
+    "express": "^4.10.4",
+    "less-middleware": "^1.0.4",
+    "nunjucks": "^1.1.0",
+    "react": "^0.12.1",
+    "react-router": "^0.11.4",
+    "reactify": "^0.17.1"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"no tests yet\" && exit 0"
+  },
+  "devDependencies": {
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-autoprefixer": "^2.1.0",
+    "gulp-imagemin": "^2.2.1",
+    "gulp-livereload": "^3.8.0",
+    "gulp-notify": "^2.2.0"
   }
 }
